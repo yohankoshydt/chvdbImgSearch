@@ -40,8 +40,9 @@ if embedding is not None and st.button("Search Similar Images"):
     if results:
         
         for result in results:
-            st.write(f"Image Path: {result[0]}")
+            path = result[0].replace('\\', '/')
+            st.write(f"Image Path: {path}")
             # Optionally display thumbnails if accessible by path
-            st.image(result[0])
+            st.image(path)
     else:
         st.warning("No similar images found.")
