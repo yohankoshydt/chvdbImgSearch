@@ -38,7 +38,6 @@ def mongo_all_rows():
 
 # client.insert('images', data, column_names=['_file', 'image_embedding'])
 
-query_vector = get_nomic_image_embedding(r'photos_no_class\cat-g0fcd844a4_640.jpg')
 
 def search_image_embeddings(query_embedding, top_k=10):
 
