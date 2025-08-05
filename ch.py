@@ -1,6 +1,7 @@
 import clickhouse_connect
 from pymongo import MongoClient
-from imgsrh import get_nomic_image_embedding
+
+
 
 
 import clickhouse_connect
@@ -43,7 +44,7 @@ def search_image_embeddings(query_embedding, top_k=10):
 
     query = f"""
     WITH {query_embedding} AS reference_vector
-    SELECT _file, image_embedding as vectors
+    SELECT _file, image_embedding as vectors, cosineDistance(vectors, reference_vector) as theta
     FROM images
     ORDER BY cosineDistance(vectors, reference_vector)
     LIMIT {top_k}
