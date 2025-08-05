@@ -10,7 +10,6 @@ from upload import get_face
 
 st.title("Image Search")
 
-mode = st.radio("Search mode:", ["By Image", "By Text Prompt"])
 
 embedding = None
 image_path = None
@@ -18,26 +17,21 @@ prompt = None
 
 upload_to_db = False
 
-if mode == "By Image":
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-    if uploaded_file is not None:
-        temp_path = f"temp_uploaded_{uploaded_file.name}"
-        img_bytes = uploaded_file.read()
-        with open(temp_path, "wb") as f:
-            f.write(img_bytes)
-        image_path = temp_path
-        face = get_face(img_bytes)
-        image_path = 'face.jpg'
-        with open(image_path, "wb") as f:
-            cv2.imwrite(image_path, face)
-        embedding = get_nomic_image_embedding(image_path)
-        st.image(temp_path, caption="Uploaded Image", width = 300)
-elif mode == "By Text Prompt":
-    prompt = st.text_input("Enter text prompt:")
-    if prompt:
-        result = get_nomic_text_embedding([prompt])
-        embedding = result["embeddings"][0]
-        st.write(f"Prompt embedding: {embedding[:8]}...")
+
+uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+if uploaded_file is not None:
+    temp_path = f"temp_uploaded_{uploaded_file.name}"
+    img_bytes = uploaded_file.read()
+    with open(temp_path, "wb") as f:
+        f.write(img_bytes)
+    image_path = temp_path
+    face = get_face(img_bytes)
+    image_path = 'face.jpg'
+    with open(image_path, "wb") as f:
+        cv2.imwrite(image_path, face)
+    embedding = get_nomic_image_embedding(image_path)
+    st.image(temp_path, caption="Uploaded Image", width = 300)
+
 
 # top_k = st.number_input("How many similar images to return?", min_value=1, max_value=100, value=10)
 
