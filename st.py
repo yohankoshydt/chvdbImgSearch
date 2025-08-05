@@ -5,6 +5,7 @@ import streamlit as st
 from imgsrh import get_nomic_image_embedding, get_nomic_text_embedding
 from ch import search_image_embeddings
 from upload import get_face
+import math
 # --- Import or define your functions here ---
 # from your_module import get_nomic_image_embedding, get_nomic_text_embedding, upload_image_embedding, search_image_embeddings
 
@@ -45,7 +46,7 @@ if embedding is not None and st.button("Search Similar Images"):
         for result in results:
             path = result[0].replace('\\', '/')
             st.write(f"Celebrity: {path.split('.')[0]}")
-            st.write(f"Similarity Score: {result[2] * 100:.2f}%")
+            st.write(f"Similarity Score: {math.cos(result[2])*100}%")
             # Optionally display thumbnails if accessible by path
             st.image(os.path.join('images', path), caption=path, width=300,)
     else:
