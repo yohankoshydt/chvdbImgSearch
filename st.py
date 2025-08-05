@@ -50,7 +50,7 @@ if embedding is not None and st.button("Search Similar Images"):
         
         for result in results:
             path = result[0].replace('\\', '/')
-            st.write(f"Image Path: {path}")
+            st.write(f"Celebrity: {path.split('.')[0]}")
             st.write(f"Similarity Score: {result[2] * 100:.2f}%")
             # Optionally display thumbnails if accessible by path
             st.image(os.path.join('images', path), caption=path, width=300,)
