@@ -2,7 +2,7 @@
 import os
 import cv2
 import streamlit as st
-from imgsrh import get_nomic_image_embedding, get_nomic_text_embedding
+from imgsrh import get_nomic_image_embedding, get_nomic_text_embedding, insightface_embedding
 from ch import search_image_embeddings
 from upload import get_face
 import math
@@ -26,11 +26,9 @@ if uploaded_file is not None:
     with open(temp_path, "wb") as f:
         f.write(img_bytes)
     image_path = temp_path
-    face = get_face(img_bytes)
-    image_path = 'face.jpg'
-    with open(image_path, "wb") as f:
-        cv2.imwrite(image_path, face)
-    embedding = get_nomic_image_embedding(image_path)
+  
+   
+    embedding = insightface_embedding(image_path)
     st.image(temp_path, caption="Uploaded Image", width = 300)
 
 

@@ -2,7 +2,7 @@ import os
 import clickhouse_connect
 import numpy as np
 import pandas as pd
-from imgsrh import get_nomic_image_embedding
+from imgsrh import insightface_embedding
 from tqdm import tqdm
 import cv2
 from io import BytesIO
@@ -46,19 +46,26 @@ if __name__ == "__main__":
     data = []
     images = os.listdir('images')
     i = 0
+    all_images = client.query("SELECT _file FROM images").result_set
+    all_images = [img[0] for img in all_images]
+    print(f"Found {len(all_images)} images in ClickHouse database.")
+    images = [img for img in images if img not in all_images]
+    print(f"Found {len(images)} new images to process.")
     for img in tqdm(images):
+        print(f"Processing image: {img}")
         if i >= 2000:
             break
-        with open(os.path.join('images', img), 'rb') as f:
-            face = get_face(f.read())
-        if face is None:
-            print(f"Skipping {img} due to no face detected.")
+        
+       
+        embedding = insightface_embedding(os.path.join('images', img))
+        if embedding is None:
+            print(f"Skipping {img} due to no embedding found.")
             continue
-        face_path = 'face.jpg'
-        cv2.imwrite(face_path, face)
-        data.append([img, get_nomic_image_embedding(face_path)])
+        data.append([img, embedding])
         i += 1
+        
     if data:
         print("Inserting data into ClickHouse...")
+        print(f"Total images to insert: {len(data)}")
         # Insert data into ClickHouse
         client.insert('images', data, column_names=['_file', 'image_embedding'])

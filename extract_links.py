@@ -15,10 +15,11 @@ def extract_full_links(url):
     full_links = []
     seen = set()
     for tag in soup.find_all('a', href=True):
-        abs_url = urljoin(url, tag['href'])
-        if abs_url.startswith("http") and abs_url not in seen:
-            full_links.append(abs_url)
-            seen.add(abs_url)
+        if not tag['href'].startswith('#cite'):
+            abs_url = urljoin(url, tag['href'])
+            if abs_url.startswith("http") and abs_url not in seen:
+                full_links.append(abs_url)
+                seen.add(abs_url)
     return full_links
 
 

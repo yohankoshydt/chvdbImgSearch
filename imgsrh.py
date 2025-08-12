@@ -5,6 +5,31 @@ from dotenv import load_dotenv
 load_dotenv()
 
 NOMIC_API_KEY = os.getenv("NOMIC_API_KEY")  # Or paste your API key string here
+import cv2
+from insightface.app import FaceAnalysis
+
+# Initialize FaceAnalysis app once (do outside function for efficiency)
+app = FaceAnalysis(name='buffalo_l')  # Use 'buffalo_l' for best accuracy
+app.prepare(ctx_id=0, det_size=(640, 640))  # ctx_id=0 for GPU, -1 for CPU
+
+def insightface_embedding(image_path):
+    """
+    Loads image, detects face, and returns the face embedding (512-dim).
+    Returns None if no face found.
+    """
+    img = cv2.imread(image_path)
+    if img is None:
+        print(f"Error: could not read image {image_path}")
+        return None
+    faces = app.get(img)
+    if faces:
+        emb = faces[0].embedding  # Numpy array, shape (512,)
+        return emb.flatten().tolist()
+    else:
+        print(f"No face found in {image_path}")
+        return None
+
+
 
 def get_nomic_image_embedding(image_path):
     """
@@ -182,6 +207,12 @@ def search_image_embeddings(query_embedding, top_k=10):
 
 
 if __name__ == "__main__":
+
+    insightface_embedding = insightface_embedding("temp_uploaded_indian man.jpg")
+    if insightface_embedding is not None:
+        print("Embedding:", insightface_embedding)
+    else:
+        print("No face detected or error in embedding.")
     pass
 
     # for file in os.listdir("photos_no_class"):
