@@ -20,6 +20,8 @@ upload_to_db = False
 
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+col1, col2 = st.columns(2) 
+
 if uploaded_file is not None:
     temp_path = f"temp_uploaded_{uploaded_file.name}"
     img_bytes = uploaded_file.read()
@@ -29,7 +31,8 @@ if uploaded_file is not None:
   
    
     embedding = insightface_embedding(image_path)
-    st.image(temp_path, caption="Uploaded Image", width = 300)
+    with col1:
+        st.image(temp_path, caption="Uploaded Image", width = 300)
 
 
 # top_k = st.number_input("How many similar images to return?", min_value=1, max_value=100, value=10)
@@ -43,9 +46,11 @@ if embedding is not None and st.button("Search Similar Images"):
         
         for result in results:
             path = result[0].replace('\\', '/')
-            st.write(f"Celebrity: {path.split('.')[0]}")
-            st.write(f"Similarity Score: {math.cos(result[2])*100}%")
+            
             # Optionally display thumbnails if accessible by path
-            st.image(os.path.join('images', path), caption=path, width=300,)
+            with col2:
+                st.image(os.path.join('images', path), caption=path, width=300,)
+                st.write(f"Celebrity: {path.split('.')[0]}")
+                st.write(f"Similarity Score: {math.cos(result[2])*100}%")
     else:
         st.warning("No similar images found.")
