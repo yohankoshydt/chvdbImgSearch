@@ -10,3 +10,4 @@ python-dotenv==1.1.1
 Requests==2.32.4
 streamlit==1.45.1
 tqdm==4.67.1
+onnxruntime
