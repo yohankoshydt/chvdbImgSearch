@@ -26,7 +26,7 @@ def extract_full_links(url):
 # --- Usage Example ---
 if __name__ == "__main__":
     page_url = input("Enter the webpage URL: ").strip()
-    out_csv = "extracted_links.csv"
+    out_csv = "extracted_links2.csv"
 
     try:
         links = extract_full_links(page_url)
